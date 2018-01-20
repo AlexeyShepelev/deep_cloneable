@@ -132,7 +132,7 @@ class ActiveRecord::Base
       objects = self.send(options[:association])
       objects = objects.select{|object| evaluate_conditions(object, options[:conditions]) } if options[:conditions].any?
 
-      objects.collect do |object|
+      objects.sort_by(&:id).collect do |object|
         tmp = object.deep_clone(options[:dup_options], &block)
         tmp.send("#{primary_key_name}=", nil)
         tmp.send("#{reverse_association_name.to_s}=", options[:copy]) if reverse_association_name
@@ -164,7 +164,7 @@ class ActiveRecord::Base
       objects = self.send(options[:association])
       objects = objects.select{|object| evaluate_conditions(object, options[:conditions]) } if options[:conditions].any?
 
-      objects.collect do |object|
+      objects.sort_by(&:id).collect do |object|
         dict = options[:dup_options][:dictionary]
         if(dict && object.find_in_dict_or_dup(dict, false))
           object = object.deep_clone(options[:dup_options], &block)
